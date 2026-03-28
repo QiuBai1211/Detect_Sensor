@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Design 主色调 -->
+    <color name="primary">#0A0A0A</color>
+    <color name="primary_variant">#1E1E1E</color>
+    <color name="secondary">#2A2A2A</color>
+    <color name="secondary_variant">#2D2D2D</color>
+    
+    <!-- 文字颜色 -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#CCCCCC</color>
+    <color name="text_tertiary">#888888</color>
+    <color name="text_disabled">#666666</color>
+    
+    <!-- 传感器专用颜色 -->
+    <color name="sensor_accelerometer">#FF6B6B</color>
+    <color name="sensor_gyroscope">#4ECDC4</color>
+    <color name="sensor_magnetometer">#45B7D1</color>
+    <color name="sensor_proximity">#96CEB4</color>
+    <color name="sensor_light">#FFEAA7</color>
+    <color name="sensor_pressure">#DDA0DD</color>
+    <color name="sensor_gravity">#FFA07A</color>
+    <color name="sensor_linear_acceleration">#20B2AA</color>
+    <color name="sensor_rotation_vector">#9370DB</color>
+    <color name="sensor_temperature">#FF6347</color>
+    <color name="sensor_humidity">#6495ED</color>
+    <color name="sensor_step">#3CB371</color>
+    <color name="sensor_heart">#FF69B4</color>
+    
+    <!-- 状态颜色 -->
+    <color name="status_normal">#4CAF50</color>
+    <color name="status_warning">#FF9800</color>
+    <color name="status_error">#F44336</color>
+    <color name="status_active">#2196F3</color>
+    <color name="status_inactive">#757575</color>
+    <color name="status_level">#4CAF50</color>
+    <color name="status_tilted">#FF9800</color>
+    <color name="status_shake">#F44336</color>
+    
+    <!-- 背景色 -->
+    <color name="background_dark">#0A0A0A</color>
+    <color name="background_card">#1E1E1E</color>
+    <color name="background_card_secondary">#2A2A2A</color>
+    <color name="background_container">#2D2D2D</color>
+    <color name="background_elevated">#3A3A3A</color>
+    
+    <!-- 强调色 -->
+    <color name="accent_primary">#FF6B6B</color>
+    <color name="accent_secondary">#4ECDC4</color>
+    <color name="accent_tertiary">#45B7D1</color>
+    <color name="accent_quaternary">#96CEB4</color>
+    
+    <!-- 数据可视化颜色 -->
+    <color name="data_red">#FF5252</color>
+    <color name="data_green">#4CAF50</color>
+    <color name="data_blue">#2196F3</color>
+    <color name="data_yellow">#FFEB3B</color>
+    <color name="data_cyan">#00BCD4</color>
+    <color name="data_magenta">#E91E63</color>
+    <color name="data_orange">#FF9800</color>
+    <color name="data_purple">#9C27B0</color>
+    
+    <!-- 数值范围颜色 -->
+    <color name="value_low">#4CAF50</color>      <!-- 低值 -->
+    <color name="value_medium">#FF9800</color>   <!-- 中值 -->
+    <color name="value_high">#F44336</color>     <!-- 高值 -->
+    <color name="value_critical">#D32F2F</color>  <!-- 临界值 -->
+    
+    <!-- 图表颜色 -->
+    <color name="chart_line_x">#FF5252</color>
+    <color name="chart_line_y">#4CAF50</color>
+    <color name="chart_line_z">#2196F3</color>
+    <color name="chart_line_total">#FF9800</color>
+    <color name="chart_grid">#424242</color>
+    <color name="chart_axis">#616161</color>
+    
+    <!-- 按钮颜色 -->
+    <color name="button_normal">#2A2A2A</color>
+    <color name="button_pressed">#3A3A3A</color>
+    <color name="button_disabled">#1A1A1A</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="button_text_disabled">#666666</color>
+    <color name="button_accent">#FF6B6B</color>
+    
+    <!-- 阴影和边框 -->
+    <color name="shadow_light">#1A000000</color>
+    <color name="shadow_dark">#33000000</color>
+    <color name="border_light">#424242</color>
+    <color name="border_dark">#212121</color>
+    <color name="divider">#424242</color>
+    
+    <!-- 透明和半透明 -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+    <color name="overlay_dark">#CC000000</color>
+    <color name="overlay_light">#CCFFFFFF</color>
+    
+    <!-- 主题相关 -->
+    <color name="colorPrimary">#0A0A0A</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FF6B6B</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorSurface">#121212</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorBackground">#0A0A0A</color>
+    
+    <!-- 光线传感器状态 -->
+    <color name="light_dark">#1A237E</color>
+    <color name="light_dim">#283593</color>
+    <color name="light_normal">#3949AB</color>
+    <color name="light_bright">#5C6BC0</color>
+    <color name="light_very_bright">#9FA8DA</color>
+    
+    <!-- 接近传感器状态 -->
+    <color name="proximity_far">#4CAF50</color>
+    <color name="proximity_near">#F44336</color>
+    
+    <!-- 单位标签颜色 -->
+    <color name="unit_label">#78909C</color>
+    <color name="unit_value">#B0BEC5</color>
+</resources>
