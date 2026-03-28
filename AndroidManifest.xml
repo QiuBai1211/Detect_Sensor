@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <!-- 各种传感器硬件特性（非必需） -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.compass" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.proximity" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.light" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.barometer" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.heartrate" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SensorDetector"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+    </application>
+
+</manifest>
+MainActivity.java
+java
+下载
+复制
+package com.example.sensordetector;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
+    
+    private SensorManager sensorManager;
+    private TextView tvSensorCount, tvSensorList, tvAccelerometerData, tvGyroscopeData, tvMagneticData;
+    private TextView tvSensorValues, tvStatus;
+    private static final int PERMISSIONS_REQUEST_CODE = 1001;
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Map<Integer, Sensor> activeSensors = new HashMap<>();
+    
+    // 颜色数组用于不同传感器数据显示
+    private int[] colors = {
+        Color.parseColor("#FF6B6B"),  // 红色
+        Color.parseColor("#4ECDC4"),  // 青色
+        Color.parseColor("#45B7D1"),  // 蓝色
+        Color.parseColor("#96CEB4"),  // 绿色
+        Color.parseColor("#FFEAA7"),  // 黄色
+        Color.parseColor("#DDA0DD")   // 紫色
+    };
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        initViews();
+        initSensors();
+    }
+    
+    private void initViews() {
+        tvSensorCount = findViewById(R.id.tv_sensor_count);
+        tvSensorList = findViewById(R.id.tv_sensor_list);
+        tvAccelerometerData = findViewById(R.id.tv_accelerometer_data);
+        tvGyroscopeData = findViewById(R.id.tv_gyroscope_data);
+        tvMagneticData = findViewById(R.id.tv_magnetic_data);
+        tvSensorValues = findViewById(R.id.tv_sensor_values);
+        tvStatus = findViewById(R.id.tv_status);
+    }
+    
+    private void initSensors() {
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        
+        if (checkPermissions()) {
+            setupSensors();
+        } else {
+            requestPermissions();
+        }
+    }
+    
+    private boolean checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, 
+                Manifest.permission.BODY_SENSORS) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        if (ContextCompat.checkSelfPermission(this, 
+                Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+    
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+            new String[]{
+                Manifest.permission.BODY_SENSORS,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            },
+            PERMISSIONS_REQUEST_CODE);
+    }
+    
+    private void setupSensors() {
+        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        tvSensorCount.setText(String.format("检测到 %d 个传感器", sensorList.size()));
+        
+        StringBuilder listBuilder = new StringBuilder();
+        int colorIndex = 0;
+        
+        for (Sensor sensor : sensorList) {
+            String sensorType = getSensorTypeName(sensor.getType());
+            listBuilder.append(String.format("🎯 %s\n", sensorType))
+                      .append(String.format("   📱 %s\n", sensor.getName()))
+                      .append(String.format("   🏢 %s\n", sensor.getVendor()))
+                      .append(String.format("   🔢 范围: ±%.2f\n", sensor.getMaximumRange()))
+                      .append(String.format("   ⚡ 功耗: %.2f mA\n", sensor.getPower()))
+                      .append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+            
+            // 注册常用传感器
+            registerCommonSensors(sensor);
+        }
+        
+        tvSensorList.setText(listBuilder.toString());
+        startSensorUpdates();
+    }
+    
+    private void registerCommonSensors(Sensor sensor) {
+        switch (sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+            case Sensor.TYPE_GYROSCOPE:
+            case Sensor.TYPE_MAGNETIC_FIELD:
+            case Sensor.TYPE_LIGHT:
+            case Sensor.TYPE_PROXIMITY:
+            case Sensor.TYPE_PRESSURE:
+            case Sensor.TYPE_GRAVITY:
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+            case Sensor.TYPE_ROTATION_VECTOR:
+            case Sensor.TYPE_STEP_COUNTER:
+            case Sensor.TYPE_STEP_DETECTOR:
+                activeSensors.put(sensor.getType(), sensor);
+                break;
+        }
+    }
+    
+    private void startSensorUpdates() {
+        for (Map.Entry<Integer, Sensor> entry : activeSensors.entrySet()) {
+            sensorManager.registerListener(this, entry.getValue(), 
+                SensorManager.SENSOR_DELAY_UI);
+        }
+        
+        // 更新状态
+        tvStatus.setText("✅ 传感器监控中...\n📡 已启用 " + activeSensors.size() + " 个传感器");
+    }
+    
+    private String getSensorTypeName(int type) {
+        Map<Integer, String> sensorNames = new HashMap<>();
+        sensorNames.put(Sensor.TYPE_ACCELEROMETER, "加速度计");
+        sensorNames.put(Sensor.TYPE_GYROSCOPE, "陀螺仪");
+        sensorNames.put(Sensor.TYPE_MAGNETIC_FIELD, "磁力计");
+        sensorNames.put(Sensor.TYPE_PROXIMITY, "接近传感器");
+        sensorNames.put(Sensor.TYPE_LIGHT, "光线传感器");
+        sensorNames.put(Sensor.TYPE_PRESSURE, "压力传感器");
+        sensorNames.put(Sensor.TYPE_GRAVITY, "重力传感器");
+        sensorNames.put(Sensor.TYPE_LINEAR_ACCELERATION, "线性加速度");
+        sensorNames.put(Sensor.TYPE_ROTATION_VECTOR, "旋转矢量");
+        sensorNames.put(Sensor.TYPE_RELATIVE_HUMIDITY, "湿度传感器");
+        sensorNames.put(Sensor.TYPE_AMBIENT_TEMPERATURE, "温度传感器");
+        sensorNames.put(Sensor.TYPE_STEP_COUNTER, "计步器");
+        sensorNames.put(Sensor.TYPE_STEP_DETECTOR, "步进检测器");
+        sensorNames.put(Sensor.TYPE_HEART_RATE, "心率传感器");
+        sensorNames.put(Sensor.TYPE_ORIENTATION, "方向传感器");
+        return sensorNames.getOrDefault(type, "未知传感器 (" + type + ")");
+    }
+    
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        handler.post(() -> {
+            float[] values = event.values;
+            String sensorType = getSensorTypeName(event.sensor.getType());
+            
+            // 根据传感器类型显示数据
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ACCELEROMETER:
+                    displayAccelerometerData(values);
+                    break;
+                case Sensor.TYPE_GYROSCOPE:
+                    displayGyroscopeData(values);
+                    break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    displayMagneticData(values);
+                    break;
+            }
+            
+            // 显示所有传感器值
+            updateSensorValues(sensorType, values);
+            
+            // 特殊功能检测
+            checkSpecialFeatures(event);
+        });
+    }
+    
+    private void displayAccelerometerData(float[] values) {
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+        
+        // 计算总加速度
+        float totalAcceleration = (float) Math.sqrt(x * x + y * y + z * z);
+        
+        // 计算倾斜角度
+        double pitch = Math.toDegrees(Math.atan2(-x, Math.sqrt(y * y + z * z)));
+        double roll = Math.toDegrees(Math.atan2(y, z));
+        
+        String data = String.format(Locale.getDefault(),
+            "📱 加速度传感器\n" +
+            "X: %7.2f m/s²\n" +
+            "Y: %7.2f m/s²\n" +
+            "Z: %7.2f m/s²\n" +
+            "总加速度: %7.2f m/s²\n" +
+            "俯仰角: %6.1f°\n" +
+            "翻滚角: %6.1f°",
+            x, y, z, totalAcceleration, pitch, roll
+        );
+        
+        tvAccelerometerData.setText(data);
+        
+        // 摇晃检测
+        if (totalAcceleration > 25) {
+            tvAccelerometerData.setTextColor(Color.RED);
+            showToast("检测到摇晃！");
+        } else if (Math.abs(pitch) < 5 && Math.abs(roll) < 5) {
+            tvAccelerometerData.setTextColor(Color.GREEN);
+        } else {
+            tvAccelerometerData.setTextColor(Color.WHITE);
+        }
+    }
+    
+    private void displayGyroscopeData(float[] values) {
+        String data = String.format(Locale.getDefault(),
+            "🎯 陀螺仪传感器\n" +
+            "X轴角速度: %7.2f rad/s\n" +
+            "Y轴角速度: %7.2f rad/s\n" +
+            "Z轴角速度: %7.2f rad/s",
+            values[0], values[1], values[2]
+        );
+        tvGyroscopeData.setText(data);
+    }
+    
+    private void displayMagneticData(float[] values) {
+        float strength = (float) Math.sqrt(
+            values[0] * values[0] + 
+            values[1] * values[1] + 
+            values[2] * values[2]
+        );
+        
+        String data = String.format(Locale.getDefault(),
+            "🧲 磁场传感器\n" +
+            "X: %7.2f μT\n" +
+            "Y: %7.2f μT\n" +
+            "Z: %7.2f μT\n" +
+            "磁场强度: %7.2f μT",
+            values[0], values[1], values[2], strength
+        );
+        tvMagneticData.setText(data);
+    }
+    
+    private void updateSensorValues(String sensorType, float[] values) {
+        StringBuilder valueBuilder = new StringBuilder();
+        valueBuilder.append(String.format("🔍 %s 实时数据:\n", sensorType));
+        
+        for (int i = 0; i < values.length; i++) {
+            valueBuilder.append(String.format("   值%d: %8.4f\n", i + 1, values[i]));
+        }
+        valueBuilder.append("\n");
+        
+        String currentText = tvSensorValues.getText().toString();
+        String[] lines = currentText.split("\n");
+        
+        // 只保留最新的5个传感器数据
+        if (lines.length > 20) {
+            StringBuilder newText = new StringBuilder();
+            for (int i = lines.length - 15; i < lines.length; i++) {
+                if (i >= 0) {
+                    newText.append(lines[i]).append("\n");
+                }
+            }
+            currentText = newText.toString();
+        }
+        
+        tvSensorValues.setText(valueBuilder.toString() + currentText);
+    }
+    
+    private void checkSpecialFeatures(SensorEvent event) {
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_PROXIMITY:
+                if (event.values[0] < event.sensor.getMaximumRange()) {
+                    showToast("检测到物体靠近");
+                }
+                break;
+            case Sensor.TYPE_LIGHT:
+                if (event.values[0] < 10) {
+                    tvStatus.setText("🌙 环境光线：暗");
+                } else if (event.values[0] > 1000) {
+                    tvStatus.setText("☀️ 环境光线：亮");
+                } else {
+                    tvStatus.setText("⛅ 环境光线：正常");
+                }
+                break;
+        }
+    }
+    
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // 精度变化处理
+    }
+    
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sensorManager != null && !activeSensors.isEmpty()) {
+            for (Sensor sensor : activeSensors.values()) {
+                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+            }
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setupSensors();
+            } else {
+                tvStatus.setText("❌ 需要传感器权限");
+                showToast("缺少必要权限，部分功能可能无法使用");
+            }
+        }
+    }
+}
