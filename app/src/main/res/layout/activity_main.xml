@@ -25,11 +25,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📱 传感器检测器"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp"/>
+                android:text="@string/app_name"
+                android:textColor="@color/text_primary"
+                style="@style/TextAppearance.SensorDetector.Headline"/>
 
             <TextView
                 android:id="@+id/tv_sensor_count"
