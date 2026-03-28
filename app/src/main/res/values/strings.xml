@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用名称 -->
+    <string name="app_name">Sensor Detector</string>
+    <string name="app_name_full">传感器检测器</string>
+    
+    <!-- 主界面文本 -->
+    <string name="sensor_detector">📱 传感器检测器</string>
+    <string name="detecting">检测中...</string>
+    <string name="sensor_count">检测到 %d 个传感器</string>
+    <string name="status_init">状态：初始化...</string>
+    <string name="status_monitoring">✅ 传感器监控中...\n📡 已启用 %d 个传感器</string>
+    <string name="status_permission_denied">❌ 需要传感器权限</string>
+    
+    <!-- 传感器类型 -->
+    <string name="sensor_accelerometer">加速度计</string>
+    <string name="sensor_gyroscope">陀螺仪</string>
+    <string name="sensor_magnetometer">磁力计</string>
+    <string name="sensor_proximity">接近传感器</string>
+    <string name="sensor_light">光线传感器</string>
+    <string name="sensor_pressure">压力传感器</string>
+    <string name="sensor_gravity">重力传感器</string>
+    <string name="sensor_linear_acceleration">线性加速度</string>
+    <string name="sensor_rotation_vector">旋转矢量</string>
+    <string name="sensor_humidity">湿度传感器</string>
+    <string name="sensor_temperature">温度传感器</string>
+    <string name="sensor_step_counter">计步器</string>
+    <string name="sensor_step_detector">步进检测器</string>
+    <string name="sensor_heart_rate">心率传感器</string>
+    <string name="sensor_orientation">方向传感器</string>
+    <string name="sensor_unknown">未知传感器 (%d)</string>
+    
+    <!-- 数据显示 -->
+    <string name="accelerometer_data">📱 加速度传感器</string>
+    <string name="gyroscope_data">🎯 陀螺仪传感器</string>
+    <string name="magnetic_data">🧲 磁场传感器</string>
+    <string name="total_acceleration">总加速度: %7.2f m/s²</string>
+    <string name="pitch_angle">俯仰角: %6.1f°</string>
+    <string name="roll_angle">翻滚角: %6.1f°</string>
+    <string name="magnetic_strength">磁场强度: %7.2f μT</string>
+    <string name="real_time_data">📡 实时数据流</string>
+    
+    <!-- 数值标签 -->
+    <string name="axis_x">X:</string>
+    <string name="axis_y">Y:</string>
+    <string name="axis_z">Z:</string>
+    <string name="value_format">%8.4f</string>
+    <string name="range_format">范围: ±%.2f</string>
+    <string name="power_format">功耗: %.2f mA</string>
+    
+    <!-- 传感器信息 -->
+    <string name="sensor_name">名称: %s</string>
+    <string name="sensor_vendor">厂商: %s</string>
+    <string name="sensor_version">版本: %d</string>
+    <string name="sensor_range">范围: %.2f</string>
+    <string name="sensor_power">功耗: %.2f mA</string>
+    <string name="sensor_resolution">分辨率: %.2f</string>
+    <string name="sensor_delay">最小延迟: %d μs</string>
+    
+    <!-- 功能状态 -->
+    <string name="shaking_detected">检测到摇晃！</string>
+    <string name="object_near">检测到物体靠近</string>
+    <string name="dark_environment">🌙 环境光线：暗</string>
+    <string name="normal_light">⛅ 环境光线：正常</string>
+    <string name="bright_environment">☀️ 环境光线：亮</string>
+    <string name="device_level">✅ 手机水平放置</string>
+    <string name="device_tilted">📱 手机倾斜中</string>
+    
+    <!-- 权限提示 -->
+    <string name="permission_required">需要传感器权限</string>
+    <string name="permission_explanation">此应用需要传感器权限以检测和使用设备传感器</string>
+    <string name="permission_granted">权限已授予</string>
+    <string name="permission_denied">权限被拒绝，部分功能受限</string>
+    
+    <!-- 传感器单位 -->
+    <string name="unit_acceleration">m/s²</string>
+    <string name="unit_angular_velocity">rad/s</string>
+    <string name="unit_magnetic">μT</string>
+    <string name="unit_degree">°</string>
+    <string name="unit_lux">lx</string>
+    <string name="unit_pressure">hPa</string>
+    <string name="unit_humidity">%%</string>
+    <string name="unit_temperature">°C</string>
+    
+    <!-- 功能特性 -->
+    <string name="features_title">🎯 功能特性：</string>
+    <string name="feature_1">• 检测所有可用传感器</string>
+    <string name="feature_2">• 实时数据显示</string>
+    <string name="feature_3">• 加速度计角度计算</string>
+    <string name="feature_4">• 摇晃检测</string>
+    <string name="feature_5">• 接近/光线传感器检测</string>
+    <string name="feature_6">• 美观的UI界面</string>
+    
+    <!-- 传感器列表标题 -->
+    <string name="detected_sensors">📊 检测到的传感器</string>
+    <string name="sensor_type">传感器类型</string>
+    <string name="sensor_details">详细信息</string>
+    <string name="active_sensors">已激活传感器</string>
+    
+    <!-- 提示信息 -->
+    <string name="no_sensor_supported">设备不支持此传感器</string>
+    <string name="sensor_not_available">传感器不可用</string>
+    <string name="calibrating_sensor">正在校准传感器...</string>
+    <string name="sensor_error">传感器错误</string>
+    
+    <!-- 按钮文本 -->
+    <string name="btn_start_monitor">开始监控</string>
+    <string name="btn_stop_monitor">停止监控</string>
+    <string name="btn_refresh">刷新</string>
+    <string name="btn_calibrate">校准</string>
+    <string name="btn_settings">设置</string>
+    <string name="btn_export">导出数据</string>
+    <string name="btn_clear">清除</string>
+    
+    <!-- 菜单 -->
+    <string name="menu_settings">设置</string>
+    <string name="menu_about">关于</string>
+    <string name="menu_help">帮助</string>
+    <string name="menu_exit">退出</string>
+</resources>
